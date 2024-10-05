@@ -10,7 +10,7 @@ The **Cyber Guardian Dashboard** integrates Nmap, a powerful network scanning to
 
 - **Nmap Integration**: Perform network scans using Nmap.
 - **Vulnerability Visualization**: View scan results in an easy-to-understand format.
-- **Real-Time Monitoring**: Monitor network status and vulnerabilities in real time.
+- **Real-Time Monitoring**: Monitor network status and vulnerabilities in real-time.
 - **Customizable Scans**: Configure scan parameters and targets as needed.
 
 ## ⚙️ Getting Started
@@ -66,7 +66,7 @@ Before running the application, ensure you have the following installed:
 - **`app.py`**: Main application file that initializes and runs the Flask server.
 - **`keylogger.html`**: HTML template for displaying scan results.
 - **`keylogger.js`**: JavaScript for handling dynamic content and user interactions.
-- **`keylogger.py2`**: Python script for handling backend processes and interactions.
+- **` keylogger.py2`**: Python script for handling backend processes and interactions.
 - **`requirements.txt`**: Lists Python dependencies.
 
 ## 🔍 Example Usage
@@ -83,5 +83,5 @@ Contributions are welcome! If you have suggestions, improvements, or bug fixes, 
 
 For any questions or support, feel free to reach out:
 
-- **Email**: [timothymaina040@gmail.com](mailto:timothymaina040@gmail.com)
+- **Email**:timothymaina040@gmail.com
 - **Phone/WhatsApp**:0794637463
