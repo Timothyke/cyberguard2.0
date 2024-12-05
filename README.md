@@ -1,87 +1,79 @@
-# 🛡️ Cyber Guardian Dashboard
+🛡️ Cyber Guardian Dashboard
+Welcome to the Cyber Guardian Dashboard! This project offers an intuitive interface for monitoring and assessing network vulnerabilities using Nmap. 🚀🔍
 
-Welcome to the **Cyber Guardian Dashboard**! This project is designed to provide an intuitive interface for monitoring and assessing network vulnerabilities using Nmap. 🚀🔍
+📜 Overview
+The Cyber Guardian Dashboard leverages Nmap, a robust network scanning tool, to identify open ports and services on networked systems. Its purpose is to help IT and cybersecurity professionals quickly assess potential vulnerabilities in their networks through a user-friendly visualization.
 
-## 📜 Overview
+🚀 Features
+Nmap Integration: Perform detailed network scans with ease.
+Vulnerability Visualization: Intuitive display of scan results for actionable insights.
+Real-Time Monitoring: Keep tabs on network vulnerabilities as they arise.
+Customizable Scans: Tailor scan parameters to meet your specific needs.
+⚙️ Getting Started
+Prerequisites
+Ensure the following software is installed on your system:
 
-The **Cyber Guardian Dashboard** integrates Nmap, a powerful network scanning tool, to detect open ports and services on networked systems. The dashboard visualizes scan results, helping you stay informed about potential security vulnerabilities in your network. 
+Python 3.x: Download it here.
+Flask: Install it via pip:
+bash
+Copy code
+pip install Flask
+Nmap: Install it using your system’s package manager. For instance, on Kali Linux:
+bash
+Copy code
+sudo apt-get install nmap
+🛠️ Setup
+Clone the Repository:
 
-## 🚀 Features
+bash
+Copy code
+git clone https://github.com/your-username/cyber-guardian-dashboard.git
+cd cyber-guardian-dashboard
+Install Dependencies:
 
-- **Nmap Integration**: Perform network scans using Nmap.
-- **Vulnerability Visualization**: View scan results in an easy-to-understand format.
-- **Real-Time Monitoring**: Monitor network status and vulnerabilities in real-time.
-- **Customizable Scans**: Configure scan parameters and targets as needed.
+bash
+Copy code
+pip install -r requirements.txt
+Configure Your Environment: Ensure Nmap is installed and accessible from your system's PATH.
 
-## ⚙️ Getting Started
+🏃 Running the Application
+Start the Flask Server:
+Run the app on a specified port (e.g., 5001 if 5000 is in use):
 
-### Prerequisites
+bash
+Copy code
+python3 app.py
+If you encounter a port conflict, modify the app.run() call in app.py to specify an available port:
 
-Before running the application, ensure you have the following installed:
+python
+Copy code
+app.run(debug=True, port=5001)
+Access the Dashboard:
+Open your browser and navigate to:
 
-- **Python 3.x**: [Download Python](https://www.python.org/downloads/)
-- **Flask**: Install Flask via pip:
-  ```bash
-  pip install Flask
-  ```
-- **Nmap**: Ensure Nmap is installed on your system. Install Nmap on Kali Linux using:
-  ```bash
-  sudo apt-get install nmap
-  ```
+arduino
+Copy code
+http://127.0.0.1:5000
+🧩 Project Structure
+app.py: The main application file that initializes and runs the Flask server.
+dashboard.html: HTML template for presenting scan results.
+dashboard.js: JavaScript file for dynamic content handling.
+scanner.py: Backend script for processing scans and interfacing with Nmap.
+requirements.txt: Python dependencies list.
+🔍 Example Usage
+Run a Scan: Use the web interface to initiate a network scan.
+View Results: Analyze the detailed visualization of open ports, services, and vulnerabilities.
+Take Action: Use the data to address detected vulnerabilities promptly.
+📝 Contributing
+We welcome your contributions!
+To contribute:
 
-### 🛠️ Setup
+Fork the repository.
+Create a feature branch (git checkout -b feature-name).
+Submit a pull request with a detailed description of your changes.
+📧 Contact
+For inquiries, suggestions, or support, reach out via:
 
-1. **Clone the Repository**:
-   ```bash
-   git clone https://github.com/your-username/cyber-guardian-dashboard.git
-   cd cyber-guardian-dashboard
-   ```
-
-2. **Install Dependencies**:
-   Install required Python packages:
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-3. **Configure Your Environment**:
-   Make sure Nmap is correctly installed and accessible from your PATH.
-
-### 🏃 Running the Application
-
-1. **Start the Flask Server**:
-   If port 5000 is in use, you can specify a different port. Here’s how to run it on port 5001:
-   ```bash
-   python3 app.py
-   ```
-   If you encounter an "Address already in use" error, you might need to stop other processes using port 5000, or you can modify the `app.py` to use a different port (e.g., `app.run(debug=True, port=5001)`).
-
-2. **Access the Dashboard**:
-   Open your browser and navigate to:
-   ```
-   http://127.0.0.1:5000
-   ```
-
-## 🧩 Project Structure
-
-- **`app.py`**: Main application file that initializes and runs the Flask server.
-- **`keylogger.html`**: HTML template for displaying scan results.
-- **`keylogger.js`**: JavaScript for handling dynamic content and user interactions.
-- **` keylogger.py2`**: Python script for handling backend processes and interactions.
-- **`requirements.txt`**: Lists Python dependencies.
-
-## 🔍 Example Usage
-
-1. **Run a Scan**: Trigger a scan using the web interface.
-2. **View Results**: Check the results displayed on the dashboard.
-3. **Analyze Data**: Use the data to identify and mitigate potential vulnerabilities.
-
-## 📝 Contributing
-
-Contributions are welcome! If you have suggestions, improvements, or bug fixes, please submit a pull request or open an issue.
-
-## 📧 Contact
-
-For any questions or support, feel free to reach out:
-
-- **Email**:timothymaina040@gmail.com
-- **Phone/WhatsApp**:0794637463
+Email: timothymaina040@gmail.com
+Phone/WhatsApp: +254794637463
+Let’s safeguard your network together! 🛡️
