@@ -38,6 +38,8 @@ Let’s make this project even better together!
 Have questions, suggestions, or need support? Feel free to reach out:
 
 Email: timothymaina040@gmail.com
+
 Phone/WhatsApp: +254 794 637 463
+
 We’re here to help secure your network! 🛡️
 
