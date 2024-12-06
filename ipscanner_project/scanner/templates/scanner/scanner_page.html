@@ -1,0 +1,55 @@
+<!-- scanner_page.html -->
+ {%load static%}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IP Vulnerability Scanner</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}">  
+</head>
+
+
+<body>
+    <h1>IP Vulnerability Scanner</h1>
+
+    <form method="post" id="scan-form">
+        {% csrf_token %}
+        <input type="text" name="ip" id="target-ip" placeholder="Enter Target IP" required>
+        <button type="submit">Scan</button>
+    </form>
+
+    <div id="scan-output"></div>  <!-- Output for scan results -->
+
+    <script>
+        const form = document.getElementById('scan-form');
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const ip = document.getElementById('target-ip').value;
+
+            try {
+                const response = await fetch('/scanner/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-CSRFToken': '{{ csrf_token }}',
+                    },
+                    body: `ip=${ip}`,
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    const results = data.open_ports ? `<ul>${Object.entries(data.open_ports).map(([port, service]) => `<li>${port} - ${service}</li>`).join('')}</ul>` : data.message;
+                    document.getElementById('scan-output').innerHTML = results;
+                } else {
+                    document.getElementById('scan-output').innerHTML = `<p style="color:red;">${data.error}</p>`;
+                }
+            } catch (error) {
+                document.getElementById('scan-output').innerHTML = `<p style="color:red;">Error: ${error}</p>`;
+            }
+        });
+    </script>
+</body>
+</html>
