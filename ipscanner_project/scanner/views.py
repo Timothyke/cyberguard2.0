@@ -1,74 +1,45 @@
-import subprocess
-import re
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
+from .scan_ip import scan_ip as perform_scan, is_valid_ip, parse_nmap_output  # Import custom functions
 
-# Function to validate IP address format
-def is_valid_ip(ip):
-    pattern = re.compile(r"^(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])){3}$")
-    return bool(pattern.match(ip))
 
-# Function to parse nmap output and extract useful information
-def parse_nmap_output(output):
-    parsed_results = {}
-
-    # Parse open ports and services from nmap output
-    for line in output:
-        if "open" in line:
-            parts = line.split()
-            port = parts[0]
-            service = parts[2] if len(parts) > 2 else "Unknown Service"
-            parsed_results[port] = service
-
-    return parsed_results
-
-# Home page view (scanner page) with login required
-@login_required
-def scanner_page(request):
+def scan_ip(request):
+    """
+    Handle the actual scanning of IP addresses.
+    """
     if request.method == 'POST':
         ip = request.POST.get('ip')
 
+        # Validate the IP address
         if not ip:
-            return JsonResponse({"error": "No IP provided"}, status=400)
+            return JsonResponse({"error": "No IP address provided"}, status=400)
 
         if not is_valid_ip(ip):
-            return JsonResponse({"error": "Invalid IP address provided"}, status=400)
+            return JsonResponse({"error": "Invalid IP address"}, status=400)
 
         try:
-            # Run nmap scan on the provided IP address
-            result = subprocess.run(
-                ["nmap", "-F", ip],  # "-F" is for a fast scan of common ports
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                text=True
-            )
+            # Perform the scan
+            output = perform_scan(ip)  # Use scan_ip from scan_ip.py
+            parsed_results = parse_nmap_output(output)  # Parse results
 
-            # If nmap fails
-            if result.returncode != 0:
-                return JsonResponse({"error": f"nmap scan failed: {result.stderr.strip()}"}, status=500)
-
-            # Parse nmap output for useful data (open ports and services)
-            parsed_results = parse_nmap_output(result.stdout.splitlines())
-
-            # If no open ports are found
             if not parsed_results:
                 return JsonResponse({"ip": ip, "message": "No open ports found"}, status=200)
 
-            # Return parsed results as JSON
-            return JsonResponse({"ip": ip, "open_ports": parsed_results})
+            return JsonResponse({"ip": ip, "open_ports": parsed_results}, status=200)
 
-        except subprocess.CalledProcessError as e:
-            return JsonResponse({"error": f"Error while executing nmap: {str(e)}"}, status=500)
+        except RuntimeError as e:
+            return JsonResponse({"error": str(e)}, status=500)
 
-        except Exception as e:
-            return JsonResponse({"error": f"Unexpected error: {str(e)}"}, status=500)
+    return JsonResponse({"error": "Invalid request method"}, status=400)
 
-    return render(request, 'scanner/scanner_page.html')
 
-# Login view to handle user login
+# Login View
 def user_login(request):
+    """
+    Handle user login and authentication.
+    """
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -76,8 +47,44 @@ def user_login(request):
 
         if user is not None:
             login(request, user)
-            return redirect('scanner_page')  # Redirect to the scanner page after successful login
+            return redirect('scanner_page')  # Redirect to scanner page on success
         else:
+            # Render login page with an error message for failed login
             return render(request, 'scanner/login.html', {'error': 'Invalid username or password'})
 
-    return render(request, 'scanner/login.html')  # Render the login page for GET requests
+    # Render login page for GET requests
+    return render(request, 'scanner/login.html')
+
+
+# Scanner Page View
+@login_required
+def scanner_page(request):
+    """
+    Render the scanner page and handle IP scan requests.
+    """
+    if request.method == 'POST':
+        ip = request.POST.get('ip')
+
+        # Validate the IP address
+        if not ip:
+            return JsonResponse({"error": "No IP address provided"}, status=400)
+
+        if not is_valid_ip(ip):
+            return JsonResponse({"error": "Invalid IP address"}, status=400)
+
+        try:
+            # Perform the scan
+            output = perform_scan(ip)  # Use scan_ip function from scan_ip module
+            parsed_results = parse_nmap_output(output)  # Parse nmap results
+
+            # Return results or indicate no open ports
+            if not parsed_results:
+                return JsonResponse({"ip": ip, "message": "No open ports found"}, status=200)
+
+            return JsonResponse({"ip": ip, "open_ports": parsed_results}, status=200)
+
+        except RuntimeError as e:
+            return JsonResponse({"error": str(e)}, status=500)
+
+    # Render scanner page for GET requests
+    return render(request, 'scanner/scanner_page.html')
