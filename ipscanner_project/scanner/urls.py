@@ -2,7 +2,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('login/', views.user_login, name='login'),  # Login page
-    path('scanner/', views.scanner_page, name='scanner_page'),  # Scanner page (where the form is)
-   
+    path('scan/', views.scan_ip, name='scan_ip'),  # URL for scan_ip
+    path('login/', views.user_login, name='login'),  # Other URLs
+    path('scanner/', views.scanner_page, name='scanner_page'),
 ]
