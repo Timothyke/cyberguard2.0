@@ -1,6 +1,4 @@
-Let me help you format the README so it maintains proper alignment and visual structure when rendered on platforms like GitHub or text editors with Markdown support.
 
-Here’s an improved and better-structured version of the README, ensuring it looks polished:
 
 ---
 
