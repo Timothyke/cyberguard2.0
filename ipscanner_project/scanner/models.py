@@ -92,3 +92,20 @@ class ScanResult(models.Model):
         ordering = ['-scan_date']  # Default ordering by most recent scans
         verbose_name = 'Scan Result'
         verbose_name_plural = 'Scan Results'
+
+class ScanActivity(models.Model):
+    """
+    Model to log activities related to ScanResults.
+    """
+    scan_result = models.ForeignKey(ScanResult, on_delete=models.CASCADE, related_name='activities')
+    timestamp = models.DateTimeField(auto_now_add=True)
+    action = models.CharField(max_length=255)  # Example: "Started Scan", "Finished Scan", "Viewed Results"
+    details = models.TextField(blank=True, null=True)  # Additional context for the action
+
+    def __str__(self) -> str:
+        return f"Activity for Scan {self.scan_result.id} at {self.timestamp.strftime('%Y-%m-%d %H:%M:%S')} - {self.action}"
+
+    class Meta:
+        ordering = ['-timestamp']
+        verbose_name = 'Scan Activity'
+        verbose_name_plural = 'Scan Activities'

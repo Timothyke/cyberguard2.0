@@ -1,29 +1,48 @@
 from django.contrib import admin
-from .models import ScanResult
+from .models import ScanResult, ScanActivity
+
 
 @admin.register(ScanResult)
 class ScanResultAdmin(admin.ModelAdmin):
-    # Displayed columns in the admin list view
-    list_display = ('ip_address', 'scan_date', 'status', 'scan_type', 'operating_system', 'user')
-
-    # Searchable fields in the admin
-    search_fields = ('ip_address', 'status', 'operating_system', 'user__username')
-
-    # Filter options in the sidebar
-    list_filter = ('status', 'scan_type', 'scan_date', 'user')
-
-    # Read-only fields to prevent accidental changes to critical info
-    readonly_fields = ('ip_address', 'scan_date', 'result', 'scan_duration')
-
-    # Fieldsets for grouping fields in the detail view
+    list_display = ('ip_address', 'scan_date', 'status', 'scan_type', 'user', 'display_ports')  # Summary columns
+    list_filter = ('status', 'scan_type', 'scan_date')  # Filters in the admin panel
+    search_fields = ('ip_address', 'user__username', 'result')  # Searchable fields
+    readonly_fields = ('scan_date', 'scan_duration', 'user')  # Read-only fields
     fieldsets = (
-        ('Scan Details', {
-            'fields': ('ip_address', 'scan_date', 'status', 'scan_type', 'scan_duration', 'result')
+        (None, {
+            'fields': ('ip_address', 'status', 'scan_type', 'result')
         }),
-        ('Additional Information', {
-            'fields': ('operating_system', 'ports', 'services', 'user')
+        ('Advanced Details', {
+            'fields': ('ports', 'services', 'operating_system', 'scan_duration')
+        }),
+        ('User Information', {
+            'fields': ('user',)
         }),
     )
+    ordering = ['-scan_date']  # Default ordering by most recent scans
 
-    # Pagination for large datasets
-    list_per_page = 25
+    def display_ports(self, obj):
+        """
+        Display open ports and their services in a readable format.
+        """
+        if obj.ports:
+            return ", ".join([f"Port {p['port']} ({p.get('service', 'Unknown')})" for p in obj.ports])
+        return "No open ports"
+
+    display_ports.short_description = "Open Ports"
+
+
+@admin.register(ScanActivity)
+class ScanActivityAdmin(admin.ModelAdmin):
+    list_display = ('scan_result', 'timestamp', 'action', 'details')  # Display fields
+    list_filter = ('timestamp', 'action')  # Filters
+    search_fields = ('scan_result__ip_address', 'action', 'details')  # Searchable fields
+    readonly_fields = ('timestamp',)  # Make timestamp read-only
+
+    def get_scan_summary(self, obj):
+        """
+        Display a summary of the associated scan result.
+        """
+        return obj.scan_result.get_scan_summary()
+
+    get_scan_summary.short_description = "Scan Summary"
