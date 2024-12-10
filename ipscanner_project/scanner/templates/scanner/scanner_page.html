@@ -8,6 +8,8 @@
     <title>Cyberguard2.0 - IP Scanner</title>
     <style>
         /* General Styles */
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Poppins:wght@400;500&display=swap');
+
         body {
             font-family: 'Poppins', sans-serif;
             margin: 0;
@@ -31,10 +33,22 @@
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
         }
 
+        .logo {
+            margin-bottom: 20px;
+        }
+
+        .logo img {
+            max-width: 120px;
+            height: auto;
+        }
+
         h1 {
-            font-size: 30px;
+            font-family: 'Orbitron', sans-serif; /* Matching Orbitron font */
+            font-size: 32px;
             margin-bottom: 20px;
             color: #f8f9fa;
+            text-transform: uppercase;
+            letter-spacing: 2px;
         }
 
         p.description {
@@ -85,26 +99,59 @@
             margin-top: 20px;
             font-size: 14px;
             color: #f8f9fa;
+            text-align: left;
         }
 
         .error {
             color: #ff4c4c;
         }
+
+        .output pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            margin-top: 20px;
+            text-align: left;
+        }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- Logo Section -->
+        <div class="logo">
+            <img src="{% static 'images/logo.png.jpg' %}" alt="Cyberguard2.0 Logo">
+        </div>
+
         <h1>Cyberguard2.0 Scanner</h1>
         <p class="description">
             Enter an IP address to identify open ports and potential vulnerabilities.
         </p>
+
+        <!-- Scanner Form -->
         <form method="POST" action="{% url 'scan_ip' %}" id="scan-form">
             {% csrf_token %}
             <label for="ip">IP Address</label>
             <input type="text" id="ip" name="ip" placeholder="e.g., 192.168.0.1" required>
             <button type="submit">Scan</button>
         </form>
-        <div id="scan-output" class="output" aria-live="polite"></div>
+
+        <!-- Output Display -->
+        <div id="scan-output" class="output" aria-live="polite">
+            {% if scan_output %}
+                <div class="scan-result">
+                    <h3>Scan Results:</h3>
+                    <pre>{{ scan_output }}</pre>
+                </div>
+            {% elif error_message %}
+                <div class="error">
+                    <h3>Error:</h3>
+                    <p>{{ error_message }}</p>
+                </div>
+            {% endif %}
+        </div>
     </div>
 </body>
 </html>

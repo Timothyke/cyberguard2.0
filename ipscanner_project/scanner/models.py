@@ -1,7 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+
 class ScanResult(models.Model):
+    """
+    Model to store results of an IP scan.
+    """
     # Basic fields
     ip_address = models.GenericIPAddressField(db_index=True)  # Indexed for faster lookups
     scan_date = models.DateTimeField(auto_now_add=True, db_index=True)  # Automatically set the date, indexed
@@ -11,7 +15,7 @@ class ScanResult(models.Model):
         choices=[('success', 'Success'), ('failed', 'Failed')],
         default='success'
     )
-    
+
     # Additional fields
     ports = models.JSONField(default=list)  # Open ports and their services (JSON format)
     scan_duration = models.DurationField(null=True, blank=True)  # Nullable scan duration
@@ -66,32 +70,11 @@ class ScanResult(models.Model):
             self.operating_system = os_info
         self.save()
 
-    # Class methods
-    @classmethod
-    def get_successful_scans(cls, user: User = None):
-        """
-        Retrieve all successful scans, optionally filtered by user.
-        """
-        queryset = cls.objects.filter(status='success')
-        if user:
-            queryset = queryset.filter(user=user)
-        return queryset
-
-    @classmethod
-    def get_failed_scans(cls, user: User = None):
-        """
-        Retrieve all failed scans, optionally filtered by user.
-        """
-        queryset = cls.objects.filter(status='failed')
-        if user:
-            queryset = queryset.filter(user=user)
-        return queryset
-
-    # Meta options
     class Meta:
         ordering = ['-scan_date']  # Default ordering by most recent scans
         verbose_name = 'Scan Result'
         verbose_name_plural = 'Scan Results'
+
 
 class ScanActivity(models.Model):
     """
